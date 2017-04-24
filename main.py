@@ -1,8 +1,10 @@
 from wit import Wit
 import json
-from tools.places import query_loc
+#from tools.places import query_loc
 
 w = Wit('KL2CAZCLTOXH2DWULLZF7J5SCKLLN4IL')
+maps_key = open('keys/places.key.txt', 'r').read()
+
 
 print("[Hello!]: Hello!")
 chatting = True
@@ -18,4 +20,4 @@ while chatting:
 		for entity in response["outcomes"][0]['entities']:
 			if (entity == "local_search_query"):
 				search_query = response["outcomes"][0]['entities'][entity][0]["value"]
-				search_results = query_loc(search_query, "GOOGLE_MAPS_KEY", 5)
+				search_results = query_loc(search_query, maps_key, 5)
