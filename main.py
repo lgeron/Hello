@@ -15,4 +15,5 @@ while chatting:
 		response = w.get_message(usr_input)
 		print(response)
 		for entity in response["outcomes"][0]['entities']:
-			print(entity)
+			if (entity == "local_search_query"):
+				print(response["outcomes"][0]['entities'][entity][0]["value"])
