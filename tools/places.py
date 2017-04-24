@@ -3,6 +3,7 @@ import json
 import operator
 from geopy.distance import vincenty
 from googlemaps import Client
+from datetime import datetime
 
 #key = open('keys/places.key.txt', 'r').read()
 
@@ -25,3 +26,15 @@ def query_loc(query, key, n=10):
     sl = sorted(l, key=lambda x: x[1].miles)
 
     return sl[:n]
+
+def directions(key, address, mode="transit"):
+    lat, lon = get_location()
+    gmaps = Client(key)
+    reverse_geocode_result = gmaps.reverse_geocode((lat, lon))[0]['formatted_address']
+    print(reverse_geocode_result, address)
+    now = datetime.now()
+    directions_result = gmaps.directions(reverse_geocode_result,
+                                     address,
+                                     mode,
+                                     departure_time=now)
+    return directions_result
