@@ -7,10 +7,10 @@ maps_key = open('keys/places.key.txt', 'r').read()
 geo_key = open('keys/geocode.key.txt', 'r').read()
 
 
-print("[Hello!]: Hello!")
+print("Say something, anything!")
 chatting = True
 while chatting:
-    usr_input = input(":::: ")
+    usr_input = input("::::")
 
     if (usr_input == "q"):
         chatting = False
@@ -25,7 +25,7 @@ while chatting:
                 for i in range(len(search_results)):
                     print(search_results[i][0][0])
                 print("Would you like me to send directions to {}?".format(search_results[0][0][0]))
-                usr_input = input(":::: ")
+                usr_input = input("::::")
                 response = w.get_message(usr_input)
                 for entity in response["outcomes"][0]['entities']:
                     print(response["outcomes"][0]['entities'][entity][0]["value"])
