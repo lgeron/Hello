@@ -2,6 +2,7 @@ from wit import Wit
 import json
 import re
 from tools.places import query_loc, directions
+from tools.email_reminder import text_send, email_send
 
 w = Wit('KL2CAZCLTOXH2DWULLZF7J5SCKLLN4IL')
 maps_key = open('keys/places.key.txt', 'r').read()
@@ -36,3 +37,22 @@ while chatting:
                             print(re.sub(r'<.*?>', '', i['html_instructions']))
                     else:
                         print("Ok no problem!")
+            elif entity == "reminder":
+                reminder = response["outcomes"][0]['entities'][entity][0]["value"]
+                print("When would you like me to remind you of that?")
+                usr_input = input(":::: ")
+                response = w.get_message(usr_input)
+                for entity in response["outcomes"][0]['entities']:
+                    if entity == "duration":
+                        t = response["outcomes"][0]['entities'][entity][0]['normalized']['value']
+                    else:
+                        print("I'm sorry, I didn't understand that time phrase. Please input in a more normal format ya dingus.")
+                        pass
+                print("And would you like me to do that via messaging or email?")
+                usr_input = input(":::: ")
+                if usr_input == "text":
+                    text_send(reminder, t)
+                else:
+                    print("And what email should I send that to?")
+                    email = input(":::: ")
+                    email_send(email, reminder, t)

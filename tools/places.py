@@ -1,6 +1,5 @@
 import requests
 import json
-import operator
 from geopy.distance import vincenty
 from googlemaps import Client
 from datetime import datetime
