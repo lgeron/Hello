@@ -7,6 +7,7 @@ def intermediate_text(reminder):
     print(reminder)
 
 def text_send(reminder, t):
+    #TODO: take time t in as format 2017-05-24T00:00:00.000-07:00 and be able to process it
     '''
     :param reminder: message to remind user of
     :param t: amount of time (in seconds) to wait before sending message

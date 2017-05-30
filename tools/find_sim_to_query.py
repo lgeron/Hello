@@ -3,10 +3,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import sent_tokenize
 
-texts = pickle.load(open('real_texts.p', 'rb'))
-real_texts = []
-for text in texts:
-    real_texts.append(' '.join(text))
+
+
+#texts = pickle.load(open('real_texts.p', 'rb'))
+#real_texts = []
+#for text in texts:
+#    real_texts.append(' '.join(text))
+
 
 def search_query(query, text, n):
     vectorizer = TfidfVectorizer()
@@ -19,7 +22,8 @@ def search_query(query, text, n):
         if sim > best_sim:
             best_idx = row
             best_sim = sim
-    
+
+
     new_vectorizer = TfidfVectorizer()
     sent_texts = sent_tokenize(text[best_idx])
     new_matrix = new_vectorizer.fit_transform(sent_texts)
