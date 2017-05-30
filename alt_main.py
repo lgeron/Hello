@@ -1,15 +1,18 @@
-import sys
+import sys, pickle, re
 from wit import Wit
 from datetime import datetime
 
 sys.path.insert(0, '~/Desktop/Programming/Work/Hello/tools/')
 from tools.places import query_loc, directions
 from tools.email_reminder import text_send, email_send
+from tools.find_sim_to_query import search_query
 
 if len(sys.argv) != 2:
     print('usage: python ' + sys.argv[0] + ' <wit-token>')
     exit(1)
 access_token = sys.argv[1]
+
+texts = pickle.load(open('real_texts2.p', 'rb'))
 
 # Quickstart example
 # See https://wit.ai/ar7hur/Quickstart
@@ -53,11 +56,26 @@ def process_yesno(request):
     return context
 
 def send_directions(request):
-    key = open('keys/places.key.txt', 'r').read()
+    key = open('keys/geocode.key.txt', 'r').read()
     context = request['context']
-    print(context['location'])
-    print(directions(key, context['location']))
+    try:
+        loc = context['location']
+    except KeyError:
+        print("I'm sorry, I'm not sure where you would like to go. Please search for a location first before asking for directions.")
+        return context
+    if not isinstance(context['location'], unicode):
+        loc = context['location'][-1]
+    directions_result = directions(key, loc)
+    for step in directions_result[0]['legs'][0]['steps']:
+        if 'steps' in step:
+            print(re.sub('<.*?>', '', step['steps'][0]['html_instructions']))
+        else:
+            print(re.sub('<.*?>', '', step['html_instructions']))
+    if 'arrival_time' in directions_result[0]['legs'][0]:
+        arrival_time = directions_result[0]['legs'][0]['arrival_time']
+        print("Estimated arrival time: {0} {1}".format(arrival_time['text'], arrival_time['time_zone']))
     print("Let me know if I can help you with anything else.")
+    del context['location']
     return context
 
 def store_remind_message(request):
@@ -78,6 +96,17 @@ def send_remind_message(request):
     del context['remind_message']
     return context
 
+def process_query(request):
+    context = request['context']
+    entities = request['entities']
+
+    query = [entities['query'][0]['value']]
+    text = search_query(query, texts, 5)
+    for t in text:
+        print(t)
+    return context
+
+
 actions = {
     'send': send,
     'update_location': update_location,
@@ -85,7 +114,8 @@ actions = {
     'process_yesno': process_yesno,
     'send_directions': send_directions,
     'store_remind_message': store_remind_message,
-    'send_remind_message': send_remind_message
+    'send_remind_message': send_remind_message,
+    'process_query': process_query
 }
 
 client = Wit(access_token=access_token, actions=actions)
