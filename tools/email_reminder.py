@@ -15,14 +15,16 @@ def text_send(reminder, t):
     tim = Timer(t, intermediate_text, [reminder])
     tim.start()
 
-def intermediate_funct(email, reminder):
+def intermediate_funct(to_email, reminder):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
     server.starttls()
+    from_email = 'your email'
+    pwd = 'your password'
 
-    server.login("lgeron@t19s.com", "PorQ1415")
+    server.login(from_email, pwd)
     msg = reminder
-    server.sendmail("lgeron@t19s.com", email, msg)
+    server.sendmail(from_email, to_email, msg)
 
 
 def email_send(email, reminder, t):
