@@ -2,7 +2,7 @@ import sys, pickle, re
 from wit import Wit
 from datetime import datetime
 
-sys.path.insert(0, '~/Desktop/Programming/Work/Hello/tools/')
+sys.path.insert(0, '~/path/to/Hello/tools/')
 from tools.places import query_loc, directions
 from tools.email_reminder import text_send, email_send
 from tools.find_sim_to_query import search_query
